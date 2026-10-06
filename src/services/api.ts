@@ -74,3 +74,88 @@ export async function sendChatMessage(messages: ChatMessagePayload[]): Promise<C
     };
   }
 }
+
+export interface PrivateUnlockResponse {
+  success: boolean;
+  authenticated: boolean;
+  message?: string;
+}
+
+export interface PrivateSessionResponse {
+  authenticated: boolean;
+}
+
+export async function fetchCsrfToken(): Promise<string | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/auth/csrf/`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+    const data = await response.json();
+    return data.csrftoken || null;
+  } catch (error) {
+    console.error('CSRF Fetch Error:', error);
+    return null;
+  }
+}
+
+export async function unlockPrivate(pin: string): Promise<PrivateUnlockResponse> {
+  try {
+    const csrfToken = await fetchCsrfToken();
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (csrfToken) {
+      headers['X-CSRFToken'] = csrfToken;
+    }
+
+    const response = await fetch(`${API_BASE_URL}/api/private/unlock/`, {
+      method: 'POST',
+      headers,
+      credentials: 'include',
+      body: JSON.stringify({ pin }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Private Unlock API Error:', error);
+    return {
+      success: false,
+      authenticated: false,
+      message: 'Unable to verify PIN. Please try again.',
+    };
+  }
+}
+
+
+export async function checkPrivateSession(): Promise<PrivateSessionResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/private/session/`, {
+      method: 'GET',
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Private Session API Error:', error);
+    return { authenticated: false };
+  }
+}
+
+export async function logoutPrivate(): Promise<PrivateUnlockResponse> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/private/logout/`, {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Private Logout API Error:', error);
+    return { success: false, authenticated: false };
+  }
+}
+

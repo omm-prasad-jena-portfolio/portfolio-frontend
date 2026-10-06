@@ -6,11 +6,16 @@ import Lenis from "lenis";
 import "./styles/Navbar.css";
 import { config } from "../config";
 
+import { usePrivateAuth } from "../context/PrivateAuthContext";
+
 gsap.registerPlugin(ScrollTrigger);
 export let lenis: Lenis | null = null;
 
 const Navbar = () => {
+  const { openModal } = usePrivateAuth();
+
   useEffect(() => {
+
     // Initialize Lenis smooth scroll
     lenis = new Lenis({
       duration: 1.7,
@@ -67,9 +72,19 @@ const Navbar = () => {
   return (
     <>
       <div className="header">
-        <a href="/#" className="navbar-title" data-cursor="disable">
+        <a
+          href="/#"
+          className="navbar-title"
+          data-cursor="disable"
+          style={{ cursor: "pointer" }}
+          onClick={(e) => {
+            e.preventDefault();
+            openModal();
+          }}
+        >
           OPJ
         </a>
+
         <a
           href={`mailto:${config.contact.email || config.social.email}`}
           className="navbar-connect"
