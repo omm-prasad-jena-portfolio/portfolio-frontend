@@ -72,18 +72,30 @@ const Navbar = () => {
   return (
     <>
       <div className="header">
-        <a
-          href="/#"
+        <button
+          type="button"
           className="navbar-title"
           data-cursor="disable"
-          style={{ cursor: "pointer" }}
+          style={{
+            cursor: "pointer",
+            background: "none",
+            border: "none",
+            padding: 0,
+            margin: 0,
+            color: "inherit",
+            font: "inherit",
+            textDecoration: "none",
+            textAlign: "left",
+            display: "inline-block",
+          }}
           onClick={(e) => {
             e.preventDefault();
+            e.stopPropagation();
             openModal();
           }}
         >
           OPJ
-        </a>
+        </button>
 
         <a
           href={`mailto:${config.contact.email || config.social.email}`}
