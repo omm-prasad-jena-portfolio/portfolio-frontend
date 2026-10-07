@@ -89,7 +89,11 @@ export const PrivateAuthModal: React.FC = () => {
     try {
       const result = await unlock(pin);
       if (result.success) {
-        const personalAppUrl = import.meta.env.VITE_PERSONAL_APP_URL || "http://localhost:5174";
+        const personalAppUrl = (
+          import.meta.env.VITE_PERSONAL_APP_URL ||
+          import.meta.env.VITE_PERSONAL_URL ||
+          "http://localhost:5174"
+        ).replace(/\/$/, '');
         window.location.href = personalAppUrl;
       } else {
 
