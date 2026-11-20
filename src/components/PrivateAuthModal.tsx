@@ -92,7 +92,7 @@ export const PrivateAuthModal: React.FC = () => {
         const personalAppUrl = (
           import.meta.env.VITE_PERSONAL_APP_URL ||
           import.meta.env.VITE_PERSONAL_URL ||
-          "http://localhost:5174"
+          (import.meta.env.PROD ? 'https://portfolio-personal-mu-ruddy.vercel.app' : "http://localhost:5174")
         ).replace(/\/$/, '');
         window.location.href = personalAppUrl;
       } else {
